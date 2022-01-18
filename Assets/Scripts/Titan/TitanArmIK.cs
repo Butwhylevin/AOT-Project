@@ -11,6 +11,7 @@ public class TitanArmIK : MonoBehaviour {
     public bool ikActive = false;
     public Transform rightHandObj = null;
     public Transform lookObj = null;
+    public Transform rHandBone;
 
     void Start () 
     {
@@ -36,7 +37,8 @@ public class TitanArmIK : MonoBehaviour {
                     animator.SetIKPositionWeight(AvatarIKGoal.RightHand,1);
                     animator.SetIKRotationWeight(AvatarIKGoal.RightHand,1);  
                     animator.SetIKPosition(AvatarIKGoal.RightHand,rightHandObj.position);
-                    animator.SetIKRotation(AvatarIKGoal.RightHand,rightHandObj.rotation);
+                    Quaternion rot = Quaternion.LookRotation(rightHandObj.position - rHandBone.position);
+                    animator.SetIKRotation(AvatarIKGoal.RightHand,rot);
                 }        
                 
             }

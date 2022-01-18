@@ -14,11 +14,11 @@ public class RotatePlayer : MonoBehaviour
             //face towards grapple point 1 or 2
             if(grappleScript.grapplePoint1 != null)
             {
-                facePoint = grappleScript.grapplePoint1;
+                facePoint = grappleScript.grapplePoint1.position;
             }
             else
             {
-                facePoint = grappleScript.grapplePoint2;
+                facePoint = grappleScript.grapplePoint2.position;
             }
 
             transform.LookAt(facePoint);

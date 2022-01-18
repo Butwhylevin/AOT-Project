@@ -70,9 +70,9 @@ public class GrapplingRope : MonoBehaviour {
             gunTipPosition = grapplingGun.gunPoint2.position;
         }
 
-        var up = Quaternion.LookRotation((grapplePoint - gunTipPosition).normalized) * Vector3.up;
+        var up = Quaternion.LookRotation((grapplePoint.position - gunTipPosition).normalized) * Vector3.up;
 
-        currentGrapplePosition = Vector3.Lerp(currentGrapplePosition, grapplePoint, Time.deltaTime * 12f);
+        currentGrapplePosition = Vector3.Lerp(currentGrapplePosition, grapplePoint.position, Time.deltaTime * 12f);
 
         for (var i = 0; i < quality + 1; i++) {
             var delta = i / (float) quality;

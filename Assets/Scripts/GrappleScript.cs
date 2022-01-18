@@ -8,7 +8,8 @@ public class GrappleScript : MonoBehaviour
 {
     // Start is called before the first frame update
     public LineRenderer rend1, rend2;
-    public Vector3 grapplePoint1, grapplePoint2;
+    public Transform grapplePoint1, grapplePoint2;
+    bool movingGrapple1, movingGrapple2;
     public LayerMask whatIsGrappleable;
     public Transform cameraPoint, player; 
     public Transform gunPoint1, gunPoint2;
@@ -100,6 +101,8 @@ public class GrappleScript : MonoBehaviour
         
         CheckForPull();
 
+        MovingGrapplePoints();
+
         if(grappling && speedScript.speed > slideSpeed)
         {
             movementScript.sliding = true;
@@ -149,6 +152,20 @@ public class GrappleScript : MonoBehaviour
         DrawRope();
     }
 
+    void MovingGrapplePoints()
+    {
+        if(grapplePoint1 != null && movingGrapple1)
+        {
+            // update the joint
+            joint1.connectedAnchor = grapplePoint1.position;
+        }
+        if(grapplePoint2 != null && movingGrapple2)
+        {
+            // update the joint
+            joint2.connectedAnchor = grapplePoint2.position;
+        }
+    }
+
     void StartGrapple(float offsetMultiplier, float grappleNumb)
     {
         RaycastHit hit;
@@ -173,13 +190,27 @@ public class GrappleScript : MonoBehaviour
         {
             if(grappleNumb == 1)
             {
-                grapplePoint1 = hit.point;
+                // if the object doesn't have a rigibody, then just stick to it, otherwise, I need to be updating it
+                rb = hit.transform.gameObject.GetComponent<Rigidbody>();
+                if(rb != null)
+                {
+                    // make the grapple point a child of hit object
+                    grapplePoint1.position = hit.point;
+                    grapplePoint1.transform.parent = hit.transform;
+                    movingGrapple1 = true;
+                }
+                else
+                {
+                    grapplePoint1.position = hit.point;
+                    movingGrapple1 = false;
+                }
+
                 joint1 = player.gameObject.AddComponent<SpringJoint>();
                 joint1.autoConfigureConnectedAnchor = false;
 
-                joint1.connectedAnchor = grapplePoint1;
+                joint1.connectedAnchor = grapplePoint1.position;
 
-                float distFromPoint = Vector3.Distance(player.position, grapplePoint1);
+                float distFromPoint = Vector3.Distance(player.position, grapplePoint1.position);
                 joint1.maxDistance = distFromPoint * maxDistance;
                 joint1.minDistance = distFromPoint * minDistance;
                 rend1.positionCount = 2;
@@ -190,13 +221,27 @@ public class GrappleScript : MonoBehaviour
             }
             if(grappleNumb == 2)
             {
-                grapplePoint2 = hit.point;
+                // if the object doesn't have a rigibody, then just stick to it, otherwise, I need to be updating it
+                rb = hit.transform.gameObject.GetComponent<Rigidbody>();
+                if(rb != null)
+                {
+                    // make the grapple point a child of hit object
+                    grapplePoint2.position = hit.point;
+                    grapplePoint2.transform.parent = hit.transform;
+                    movingGrapple2 = true;
+                }
+                else
+                {
+                    grapplePoint2.position = hit.point;
+                    movingGrapple2 = false;
+                }
+
                 joint2 = player.gameObject.AddComponent<SpringJoint>();
                 joint2.autoConfigureConnectedAnchor = false;
 
-                joint2.connectedAnchor = grapplePoint2;
+                joint2.connectedAnchor = grapplePoint2.position;
 
-                float distFromPoint = Vector3.Distance(player.position, grapplePoint2);
+                float distFromPoint = Vector3.Distance(player.position, grapplePoint2.position);
                 joint2.maxDistance = distFromPoint * maxDistance;
                 joint2.minDistance = distFromPoint * minDistance;
                 rend2.positionCount = 2;
@@ -214,11 +259,21 @@ public class GrappleScript : MonoBehaviour
         {
             rend1.positionCount = 0;
             Destroy(joint1);
+            if(movingGrapple1)
+            {
+                movingGrapple1 = false;
+                grapplePoint1.transform.parent = null;
+            }
         }
         if(grappleNumb == 2)
         {
             rend2.positionCount = 0;
             Destroy(joint2);
+            if(movingGrapple2)
+            {
+                movingGrapple2 = false;
+                grapplePoint2.transform.parent = null;
+            }
         }
     }
 
@@ -240,12 +295,12 @@ public class GrappleScript : MonoBehaviour
         if(grapplePoint1 != null)
         {
             rend1.SetPosition(0, gunPoint1.position);
-            rend1.SetPosition(1, grapplePoint1);
+            rend1.SetPosition(1, grapplePoint1.position);
         }
         if(grapplePoint2 != null)
         {
             rend2.SetPosition(0, gunPoint2.position);
-            rend2.SetPosition(1, grapplePoint2);
+            rend2.SetPosition(1, grapplePoint2.position);
         }
     }
 
