@@ -19,7 +19,7 @@ public class ControlScript : MonoBehaviour
             Application.LoadLevel (Application.loadedLevel);
         }
 
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if(Input.GetKeyDown(KeyCode.Tab))
         {
             //return to menu
             Application.LoadLevel ("MainMenu");

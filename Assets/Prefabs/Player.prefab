@@ -73,7 +73,7 @@ GameObject:
   - component: {fileID: 4686108850990604687}
   - component: {fileID: 4686108850990604685}
   m_Layer: 0
-  m_Name: Back Thing 1
+  m_Name: Grappling
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -198,7 +198,7 @@ MonoBehaviour:
   grapplePoint2: {x: 0, y: 0, z: 0}
   whatIsGrappleable:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 768
   cameraPoint: {fileID: 0}
   player: {fileID: 4686108852704873253}
   gunPoint1: {fileID: 4686108852066386330}
@@ -6258,7 +6258,7 @@ MonoBehaviour:
   limitFallVelocity: -15
   groundLayer:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 768
   groundMinDistance: 0.25
   groundMaxDistance: 0.5
   slopeLimit: 75
