@@ -68,7 +68,7 @@ public class vThirdPersonCamera : MonoBehaviour
         if (target == null)
             return;
 
-        _camera = GetComponent<Camera>();
+        _camera = transform.GetChild(0).gameObject.GetComponent<Camera>();
         currentTarget = target;
         currentTargetPos = new Vector3(currentTarget.position.x, currentTarget.position.y + offSetPlayerPivot, currentTarget.position.z);
 
@@ -116,7 +116,7 @@ public class vThirdPersonCamera : MonoBehaviour
     /// <returns></returns>
     public Ray ScreenPointToRay(Vector3 Point)
     {
-        return this.GetComponent<Camera>().ScreenPointToRay(Point);
+        return _camera.ScreenPointToRay(Point);
     }
 
     /// <summary>

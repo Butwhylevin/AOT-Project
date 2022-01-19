@@ -1,15 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EZCameraShake;
 
 public class TitanBehavior : MonoBehaviour
 {
     public Transform target;
     public float moveSpd;
     public float rotSpeed = 1f;
+    public Transform rFoot, lFoot;
+    public bool rFootPart, lFootPart;
+    public GameObject footPartPrefab;
+    public float waitTime = 0.5f;
+    float curPartWaitTime;
     Quaternion nextStepRot;
     bool dead;
     Animator anim;
+    [Header("Camaera Shake")]
+    public float magn;
+    public float rough, fadeIn, fadeOut;
 
     private void Start()
     {
@@ -39,8 +48,29 @@ public class TitanBehavior : MonoBehaviour
 
             // move forwards
             transform.position += transform.forward * Time.deltaTime * moveSpd;
+
+            DoFeetParticles();
         }
         
+    }
+
+    private void DoFeetParticles()
+    {
+        curPartWaitTime -= Time.deltaTime;
+        if(rFootPart && curPartWaitTime < 0)
+        {
+            rFootPart = false;
+            CameraShaker.Instance.ShakeOnce(magn, rough, fadeIn, fadeOut);
+            Instantiate(footPartPrefab, rFoot.position, rFoot.rotation);
+            curPartWaitTime = waitTime;
+        }
+        if(lFootPart && curPartWaitTime < 0)
+        {
+            lFootPart = false;
+            CameraShaker.Instance.ShakeOnce(magn, rough, fadeIn, fadeOut);
+            Instantiate(footPartPrefab, lFoot.position, lFoot.rotation);
+            curPartWaitTime = waitTime;
+        }
     }
 
     public void UpdateRot(float frac)
