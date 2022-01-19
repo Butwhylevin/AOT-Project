@@ -10,8 +10,10 @@ public class TitanArmIK : MonoBehaviour {
     
     public bool ikActive = false;
     public Transform rightHandObj = null;
+    public Transform rightLegObj, leftLegObj;
     public Transform lookObj = null;
     public Transform rHandBone;
+    float curStep = 0;
 
     void Start () 
     {
@@ -26,19 +28,38 @@ public class TitanArmIK : MonoBehaviour {
             //if the IK is active, set the position and rotation directly to the goal. 
             if(ikActive) {
 
+                /// LOOK IK
+
                 // Set the look target position, if one has been assigned
-                if(lookObj != null) {
+                if(lookObj != null) 
+                {
                     animator.SetLookAtWeight(1);
                     animator.SetLookAtPosition(lookObj.position);
                 }    
 
+                /// ARM IK
+
                 // Set the right hand target position and rotation, if one has been assigned
-                if(rightHandObj != null) {
+                if(rightHandObj != null) 
+                {
                     animator.SetIKPositionWeight(AvatarIKGoal.RightHand,1);
                     animator.SetIKRotationWeight(AvatarIKGoal.RightHand,1);  
                     animator.SetIKPosition(AvatarIKGoal.RightHand,rightHandObj.position);
                     Quaternion rot = Quaternion.LookRotation(rightHandObj.position - rHandBone.position);
                     animator.SetIKRotation(AvatarIKGoal.RightHand,rot);
+                }        
+
+                /// LEG IK
+
+                if(leftLegObj != null) 
+                {
+                    animator.SetIKPositionWeight(AvatarIKGoal.LeftFoot,1);
+                    animator.SetIKPosition(AvatarIKGoal.LeftFoot,leftLegObj.position);
+                }
+                if(rightLegObj != null) 
+                {
+                    animator.SetIKPositionWeight(AvatarIKGoal.RightFoot,1);
+                    animator.SetIKPosition(AvatarIKGoal.RightFoot,rightLegObj.position);
                 }        
                 
             }
