@@ -119,7 +119,7 @@ public class TitanBehavior : MonoBehaviour
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
     }
 
-    private void DisableRagdoll()
+    public void DisableRagdoll()
     {
         anim.enabled = true;
         foreach(Rigidbody rb in transform.GetChild(0).GetComponentsInChildren<Rigidbody>())
@@ -128,7 +128,7 @@ public class TitanBehavior : MonoBehaviour
         }
     }
 
-    private void EnableRagdoll()
+    public void EnableRagdoll()
     {
         dead = true;
         anim.enabled = false;
