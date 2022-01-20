@@ -18,7 +18,7 @@ public class GrappleScript : MonoBehaviour
     public float maxDist = 100;
     public float spring=100f, damper=0.1f, massScale=1f, maxDistance=0.8f, minDistance=0.25f;
     public bool grappling;
-    Rigidbody rb;
+    public Rigidbody rb;
     Vector3 rayPosLeft, rayPosRight;
 
     //pull
@@ -57,7 +57,6 @@ public class GrappleScript : MonoBehaviour
         gasAmount = maxGasAmount;
         gasWait = maxGasWait;
 
-        rb = player.gameObject.GetComponent<Rigidbody>();
         smokePart.Stop();
     }
     void Update()
@@ -123,7 +122,7 @@ public class GrappleScript : MonoBehaviour
     {
         if(gasAmount > 0)
         {
-            if(Input.GetKey(KeyCode.E))
+            if(Input.GetKey(KeyCode.G))
             { 
                 DoGas();
             }
@@ -191,8 +190,8 @@ public class GrappleScript : MonoBehaviour
             if(grappleNumb == 1)
             {
                 // if the object doesn't have a rigibody, then just stick to it, otherwise, I need to be updating it
-                rb = hit.transform.gameObject.GetComponent<Rigidbody>();
-                if(rb != null)
+                Rigidbody theRb = hit.transform.gameObject.GetComponent<Rigidbody>();
+                if(theRb != null)
                 {
                     // make the grapple point a child of hit object
                     grapplePoint1.position = hit.point;
@@ -222,8 +221,8 @@ public class GrappleScript : MonoBehaviour
             if(grappleNumb == 2)
             {
                 // if the object doesn't have a rigibody, then just stick to it, otherwise, I need to be updating it
-                rb = hit.transform.gameObject.GetComponent<Rigidbody>();
-                if(rb != null)
+                Rigidbody theRb = hit.transform.gameObject.GetComponent<Rigidbody>();
+                if(theRb != null)
                 {
                     // make the grapple point a child of hit object
                     grapplePoint2.position = hit.point;
@@ -292,12 +291,12 @@ public class GrappleScript : MonoBehaviour
 
     void DrawRope()
     {
-        if(grapplePoint1 != null)
+        if(grapplePoint1 != null && rend1.positionCount > 0)
         {
             rend1.SetPosition(0, gunPoint1.position);
             rend1.SetPosition(1, grapplePoint1.position);
         }
-        if(grapplePoint2 != null)
+        if(grapplePoint2 != null && rend2.positionCount > 0)
         {
             rend2.SetPosition(0, gunPoint2.position);
             rend2.SetPosition(1, grapplePoint2.position);

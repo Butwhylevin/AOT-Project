@@ -194,8 +194,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rend1: {fileID: 4686108852797459443}
   rend2: {fileID: 4686108852891102216}
-  grapplePoint1: {x: 0, y: 0, z: 0}
-  grapplePoint2: {x: 0, y: 0, z: 0}
+  grapplePoint1: {fileID: 0}
+  grapplePoint2: {fileID: 0}
   whatIsGrappleable:
     serializedVersion: 2
     m_Bits: 768
@@ -211,6 +211,7 @@ MonoBehaviour:
   maxDistance: 0.8
   minDistance: 0.01
   grappling: 0
+  rb: {fileID: 4686108852704873273}
   pullSpring: 20
   pullMassScale: 4
   gasStrength: 1000

@@ -10,7 +10,6 @@ public class TitanArmIK : MonoBehaviour {
     
     public bool ikActive = false;
     public Transform rightHandObj = null;
-    public Transform rightLegObj, leftLegObj;
     public Transform lookObj = null;
     public Transform rHandBone;
     float curStep = 0;
@@ -47,21 +46,7 @@ public class TitanArmIK : MonoBehaviour {
                     animator.SetIKPosition(AvatarIKGoal.RightHand,rightHandObj.position);
                     Quaternion rot = Quaternion.LookRotation(rightHandObj.position - rHandBone.position);
                     animator.SetIKRotation(AvatarIKGoal.RightHand,rot);
-                }        
-
-                /// LEG IK
-
-                if(leftLegObj != null) 
-                {
-                    animator.SetIKPositionWeight(AvatarIKGoal.LeftFoot,1);
-                    animator.SetIKPosition(AvatarIKGoal.LeftFoot,leftLegObj.position);
-                }
-                if(rightLegObj != null) 
-                {
-                    animator.SetIKPositionWeight(AvatarIKGoal.RightFoot,1);
-                    animator.SetIKPosition(AvatarIKGoal.RightFoot,rightLegObj.position);
-                }        
-                
+                }                        
             }
             
             //if the IK is not active, set the position and rotation of the hand and head back to the original position

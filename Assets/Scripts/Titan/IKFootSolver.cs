@@ -56,7 +56,7 @@ public class IKFootSolver : MonoBehaviour
             
             transform.position = Vector3.Lerp(transform.position, target.position, fractionOfLerp);
             
-            behaviorScript.UpdateRot(fractionOfLerp);
+            //behaviorScript.UpdateRot(fractionOfLerp);
         }
     }
 }

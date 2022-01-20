@@ -42,7 +42,7 @@ public class vThirdPersonCamera : MonoBehaviour
     private Vector3 lookPoint;
     private Vector3 current_cPos;
     private Vector3 desired_cPos;
-    private Camera _camera;
+    public Camera _camera;
     private float distance = 5f;
     private float mouseY = 0f;
     private float mouseX = 0f;
@@ -68,7 +68,6 @@ public class vThirdPersonCamera : MonoBehaviour
         if (target == null)
             return;
 
-        _camera = transform.GetChild(0).gameObject.GetComponent<Camera>();
         currentTarget = target;
         currentTargetPos = new Vector3(currentTarget.position.x, currentTarget.position.y + offSetPlayerPivot, currentTarget.position.z);
 

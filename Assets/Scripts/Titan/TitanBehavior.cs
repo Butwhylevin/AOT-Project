@@ -5,14 +5,22 @@ using EZCameraShake;
 
 public class TitanBehavior : MonoBehaviour
 {
+    [Header("Movement")]
     public Transform target;
     public float moveSpd;
     public float rotSpeed = 1f;
-    public Transform rFoot, lFoot;
+    public float minDist = 25f, maxDist = 30f;
+    public float curDist;
+    bool moving;
+
+    [Header("Feet Particles")]
+    public Transform rFoot;
+    public Transform lFoot;
     public bool rFootPart, lFootPart;
     public GameObject footPartPrefab;
     public float waitTime = 0.5f;
     float curPartWaitTime;
+    
     Quaternion nextStepRot;
     bool dead;
     Animator anim;
@@ -29,27 +37,59 @@ public class TitanBehavior : MonoBehaviour
 
     private void Update() 
     {
-        if(Input.GetKeyDown(KeyCode.F))
+        if(Input.GetKeyDown(KeyCode.T))
         {
             EnableRagdoll();
         }
 
         if(!dead)
         {
-            /// ROTATE TOWARDS PLAYER
-            // distance between target and the actual rotating object
-            Vector3 D = target.position - transform.position;  
-            
-            // calculate the Quaternion for the rotation
-            Quaternion rot = Quaternion.Slerp(nextStepRot, Quaternion.LookRotation(D), rotSpeed * Time.deltaTime);
+            CheckDistanceFromPlayer();
+            Animation();
+            if(moving)
+            {
+                Movement();
+                DoFeetParticles();
+                UpdateRot();
+            }
+        }
+    }
 
-            //Apply the rotation 
-            nextStepRot = rot; 
+    private void Animation()
+    {
+        anim.SetBool("isMoving", moving);
+    }
 
-            // move forwards
-            transform.position += transform.forward * Time.deltaTime * moveSpd;
+    private void Movement()
+    {
+        /// ROTATE TOWARDS PLAYER
+        // distance between target and the actual rotating object
+        Vector3 D = target.position - transform.position;  
+        
+        // calculate the Quaternion for the rotation
+        Quaternion rot = Quaternion.Slerp(nextStepRot, Quaternion.LookRotation(D), rotSpeed * Time.deltaTime);
 
-            DoFeetParticles();
+        //Apply the rotation 
+        nextStepRot = rot; 
+
+        // move forwards
+        transform.position += transform.forward * Time.deltaTime * moveSpd;
+    }
+
+    private void CheckDistanceFromPlayer()
+    {
+        // checks the distance from the player, not taking into account the y
+        var vectorToTarget = target.position - transform.position;
+        vectorToTarget.y = 0;
+        curDist = vectorToTarget.magnitude;
+
+        if(moving)
+        {
+            moving = (curDist > minDist);
+        }
+        else
+        {
+            moving = (curDist > maxDist);
         }
         
     }
@@ -73,9 +113,9 @@ public class TitanBehavior : MonoBehaviour
         }
     }
 
-    public void UpdateRot(float frac)
+    public void UpdateRot()
     {
-        transform.rotation = Quaternion.Lerp(transform.rotation, nextStepRot, frac);
+        transform.rotation = nextStepRot;
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
     }
 
