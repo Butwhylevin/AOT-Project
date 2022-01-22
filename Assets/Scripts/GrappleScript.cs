@@ -367,6 +367,10 @@ public class GrappleScript : MonoBehaviour
                 //gas
                 joint1.spring = pullSpring;
                 joint1.massScale = pullMassScale;
+                // decrease the length from the point
+                float distFromPoint = Vector3.Distance(player.position, grapplePoint1.position);
+                joint1.maxDistance = distFromPoint * maxDistance;
+                joint1.minDistance = distFromPoint * minDistance;
             }
             else
             {
@@ -382,6 +386,10 @@ public class GrappleScript : MonoBehaviour
                 //gas
                 joint2.spring = pullSpring;
                 joint2.massScale = pullMassScale;
+                // decrease the length from the point
+                float distFromPoint = Vector3.Distance(player.position, grapplePoint2.position);
+                joint2.maxDistance = distFromPoint * maxDistance;
+                joint2.minDistance = distFromPoint * minDistance;
             }
             else 
             {

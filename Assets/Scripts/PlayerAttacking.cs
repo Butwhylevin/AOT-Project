@@ -1,10 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EZCameraShake;
 
 public class PlayerAttacking : MonoBehaviour
 {
     public Rigidbody rb;
+    public Animator anim;
+    public GameObject attackModel, moveModel, moveRig, moveThing1, moveThing2, moveGrapple;
     public float atkStrength = 1000f;
     public float atkCooldown = 4f;
     public float maxAtkCharge = 1f;
@@ -13,6 +16,10 @@ public class PlayerAttacking : MonoBehaviour
     public float atkTime = 1f;
     public bool doAttack;
     public bool onCooldown;
+
+    [Header("Camera Shake")]
+    public float magn;
+    public float rough, fadeIn, fadeOut;
 
     private void Update() 
     {
@@ -30,6 +37,32 @@ public class PlayerAttacking : MonoBehaviour
         {
             DoCharging();
         }
+
+        anim.SetBool("doAttack", doAttack);
+        DoAnimation();
+    }
+
+    private void DoAnimation()
+    {
+        if(charging || doAttack)
+        {
+            attackModel.SetActive(true);
+            moveModel.SetActive(false);
+            moveRig.SetActive(false);
+            moveThing1.SetActive(false);
+            moveThing2.SetActive(false);
+            moveGrapple.SetActive(false);
+        }
+        else
+        {
+            attackModel.SetActive(false);
+            moveModel.SetActive(true);
+            moveRig.SetActive(true);
+            moveThing1.SetActive(true);
+            moveThing2.SetActive(true);
+            moveGrapple.SetActive(true);
+        }
+        
     }
 
     private void DoCharging()
@@ -46,6 +79,8 @@ public class PlayerAttacking : MonoBehaviour
     {
         // reset charge
         atkCharge = 0;
+        // screenshake
+        CameraShaker.Instance.ShakeOnce(magn, rough, fadeIn, fadeOut);
         // apply forces
         rb.AddForce(Camera.main.transform.forward * atkStrength);
         // attacking

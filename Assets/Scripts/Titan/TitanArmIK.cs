@@ -12,6 +12,7 @@ public class TitanArmIK : MonoBehaviour {
     public Transform rightHandObj = null;
     public Transform lookObj = null;
     public Transform rHandBone;
+    public bool doAttack = false;
     float curStep = 0;
 
     void Start () 
@@ -39,14 +40,17 @@ public class TitanArmIK : MonoBehaviour {
                 /// ARM IK
 
                 // Set the right hand target position and rotation, if one has been assigned
-                if(rightHandObj != null) 
+                if(doAttack)
                 {
-                    animator.SetIKPositionWeight(AvatarIKGoal.RightHand,1);
-                    animator.SetIKRotationWeight(AvatarIKGoal.RightHand,1);  
-                    animator.SetIKPosition(AvatarIKGoal.RightHand,rightHandObj.position);
-                    Quaternion rot = Quaternion.LookRotation(rightHandObj.position - rHandBone.position);
-                    animator.SetIKRotation(AvatarIKGoal.RightHand,rot);
-                }                        
+                    if(rightHandObj != null) 
+                    {
+                        animator.SetIKPositionWeight(AvatarIKGoal.RightHand,1);
+                        animator.SetIKRotationWeight(AvatarIKGoal.RightHand,1);  
+                        animator.SetIKPosition(AvatarIKGoal.RightHand,rightHandObj.position);
+                        Quaternion rot = Quaternion.LookRotation(rightHandObj.position - rHandBone.position);
+                        animator.SetIKRotation(AvatarIKGoal.RightHand,rot);
+                    }      
+                }                  
             }
             
             //if the IK is not active, set the position and rotation of the hand and head back to the original position

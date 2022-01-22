@@ -12,6 +12,7 @@ public class TitanBehavior : MonoBehaviour
     public float minDist = 25f, maxDist = 30f;
     public float curDist;
     bool moving;
+    bool crouching;
 
     [Header("Feet Particles")]
     public Transform rFoot;
@@ -24,9 +25,16 @@ public class TitanBehavior : MonoBehaviour
     Quaternion nextStepRot;
     bool dead;
     Animator anim;
-    [Header("Camaera Shake")]
+    [Header("Arm IK")]
+    public TitanArmIK ikScript;
+
+    [Header("Camera Shake")]
     public float magn;
     public float rough, fadeIn, fadeOut;
+
+    [Header("Eat Player")]
+    public GameObject playerObj;
+    public GameObject playerCam, eatPlayerModelr;
 
     private void Start()
     {
@@ -86,12 +94,30 @@ public class TitanBehavior : MonoBehaviour
         if(moving)
         {
             moving = (curDist > minDist);
+            ikScript.doAttack = false;
         }
         else
         {
             moving = (curDist > maxDist);
+            DoCrouch();
         }
-        
+    }
+
+    private void DoCrouch()
+    {
+        if(target.position.y < 15)
+        {
+            crouching = true;
+            // activate arm IK
+            ikScript.doAttack = true;
+        }
+        else
+        {
+            crouching = false;
+            // deactivate arm IK
+            ikScript.doAttack = false;
+        }
+        anim.SetBool("playerBelow", crouching);
     }
 
     private void DoFeetParticles()
@@ -136,6 +162,18 @@ public class TitanBehavior : MonoBehaviour
         {
             rb.isKinematic = false;
         }
+    }
+
+    public void GrabPlayer(bool leftHand)
+    {
+        playerObj.SetActive(false);
+        playerCam.SetActive(false);
+        if(!leftHand)
+        {
+            eatPlayerModelr.SetActive(true);
+        }
+
+        anim.SetBool("isEating", true);
     }
 
 }
