@@ -21,6 +21,9 @@ public class PlayerAttacking : MonoBehaviour
     public float magn;
     public float rough, fadeIn, fadeOut;
 
+    public AudioSource audio;
+    public AudioClip attackClip;
+
     private void Update() 
     {
         if(Input.GetKeyDown(KeyCode.LeftControl) && !onCooldown)
@@ -81,6 +84,8 @@ public class PlayerAttacking : MonoBehaviour
         atkCharge = 0;
         // screenshake
         CameraShaker.Instance.ShakeOnce(magn, rough, fadeIn, fadeOut);
+        // sound
+        audio.PlayOneShot(attackClip, 1f);
         // apply forces
         rb.AddForce(Camera.main.transform.forward * atkStrength);
         // attacking

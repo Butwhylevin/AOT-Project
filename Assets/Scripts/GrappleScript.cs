@@ -24,11 +24,6 @@ public class GrappleScript : MonoBehaviour
     //pull
     public float pullSpring = 100f, pullMassScale = 4f;
 
-    //gas
-    public float gasStrength = 100f;
-    public float gasAmount, maxGasAmount=10f;
-    public float gasWait, maxGasWait = 200f; 
-
     //splitting
     public float splitIncreaseInterval = 2f;
     public float maxSplitHitDist = 100f;
@@ -49,13 +44,15 @@ public class GrappleScript : MonoBehaviour
     public LimitPlayerSpeed speedScript;
     public float slideSpeed = 10f;
 
+    // audio
+    bool doPullSound;
+    public AudioSource audio, audioPull;
+    public AudioClip grappleClip;
+
     void Start()
     {
         rend1.positionCount = 0;
         rend2.positionCount = 0;
-
-        gasAmount = maxGasAmount;
-        gasWait = maxGasWait;
 
         smokePart.Stop();
     }
@@ -118,34 +115,6 @@ public class GrappleScript : MonoBehaviour
         debugSphere2.transform.position = rayPosRight;
     }
 
-    void FixedUpdate()
-    {
-        if(gasAmount > 0)
-        {
-            if(Input.GetKey(KeyCode.G))
-            { 
-                DoGas();
-            }
-        }
-        else
-        {
-            if(smokePart.isEmitting)
-            {
-                smokePart.Stop();
-            }
-        }
-
-        if(gasAmount<maxGasAmount)
-        {
-            gasWait--;
-            if(gasWait == 0)
-            {
-                gasWait = maxGasWait;
-                gasAmount = maxGasAmount;
-            }
-        }
-    }
-
     void LateUpdate()
     {
         DrawRope();
@@ -187,6 +156,8 @@ public class GrappleScript : MonoBehaviour
 
         if(Physics.Raycast(origin: rayPos, direction: cameraPoint.forward, out hit, maxDist, layerMask: whatIsGrappleable))
         {
+            audio.PlayOneShot(grappleClip, 1);
+            
             if(grappleNumb == 1)
             {
                 // if the object doesn't have a rigibody, then just stick to it, otherwise, I need to be updating it
@@ -276,19 +247,6 @@ public class GrappleScript : MonoBehaviour
         }
     }
 
-    void DoGas()
-    {
-        if(gasAmount > 0)
-        {
-            if(!smokePart.isEmitting)
-            {
-                smokePart.Play();
-            }
-            rb.AddForce(Camera.main.transform.forward * gasStrength);
-            gasAmount--;
-        }
-    }
-
     void DrawRope()
     {
         if(grapplePoint1 != null && rend1.positionCount > 0)
@@ -371,12 +329,13 @@ public class GrappleScript : MonoBehaviour
                 float distFromPoint = Vector3.Distance(player.position, grapplePoint1.position);
                 joint1.maxDistance = distFromPoint * maxDistance;
                 joint1.minDistance = distFromPoint * minDistance;
+
+                doPullSound = true;
             }
             else
             {
                 joint1.spring = spring;
                 joint1.massScale = massScale;
-
             }
         }
         if(joint2 != null)
@@ -390,12 +349,30 @@ public class GrappleScript : MonoBehaviour
                 float distFromPoint = Vector3.Distance(player.position, grapplePoint2.position);
                 joint2.maxDistance = distFromPoint * maxDistance;
                 joint2.minDistance = distFromPoint * minDistance;
+
+                doPullSound = true;
             }
             else 
             {
                 joint2.spring = spring;
                 joint2.massScale = massScale;
 
+            }
+        }
+
+        if(doPullSound)
+        {
+            if(!audioPull.isPlaying)
+            {
+                audioPull.Play();
+            }
+            doPullSound = false;
+        }
+        else
+        {
+            if(audioPull.isPlaying)
+            {
+                audioPull.Pause();
             }
         }
     }

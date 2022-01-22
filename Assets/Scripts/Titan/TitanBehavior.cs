@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using EZCameraShake;
+using Random = UnityEngine.Random;
 
 public class TitanBehavior : MonoBehaviour
 {
@@ -41,6 +42,11 @@ public class TitanBehavior : MonoBehaviour
     public GameObject playerObj;
     public GameObject playerCam, eatPlayerModelr, eatPlayerCamerar;
     public GameObject bloodPrefab;
+    public bool eatSound = false;
+
+    [Header("Sounds")]
+    public AudioSource audio;
+    public AudioClip dieClip, eatClip, stompClip;
 
     private void Start()
     {
@@ -60,6 +66,7 @@ public class TitanBehavior : MonoBehaviour
         {
             CheckDistanceFromPlayer();
             Animation();
+            DoEatPlayer();
             if(moving)
             {
                 Movement();
@@ -124,6 +131,9 @@ public class TitanBehavior : MonoBehaviour
             CameraShaker.Instance.ShakeOnce(magn, rough, fadeIn, fadeOut);
             Instantiate(footPartPrefab, rFoot.position, rFoot.rotation);
             curPartWaitTime = waitTime;
+            audio.pitch = Random.Range(0.8f,1.2f);
+            audio.PlayOneShot(stompClip, 1f);
+            audio.pitch = 1f;
         }
         if(lFootPart && curPartWaitTime < 0)
         {
@@ -131,6 +141,9 @@ public class TitanBehavior : MonoBehaviour
             CameraShaker.Instance.ShakeOnce(magn, rough, fadeIn, fadeOut);
             Instantiate(footPartPrefab, lFoot.position, lFoot.rotation);
             curPartWaitTime = waitTime;
+            audio.pitch = Random.Range(0.8f,1.2f);
+            audio.PlayOneShot(stompClip, 1f);
+            audio.pitch = 1f;
         }
     }
 
@@ -170,6 +183,7 @@ public class TitanBehavior : MonoBehaviour
     public void EnableRagdoll()
     {
         dead = true;
+        audio.PlayOneShot(dieClip, 1f);
         anim.enabled = false;
         Instantiate(bloodPrefab, target.position, target.rotation);
         foreach(Rigidbody rb in transform.GetChild(0).GetComponentsInChildren<Rigidbody>())
@@ -194,6 +208,16 @@ public class TitanBehavior : MonoBehaviour
             }
 
             anim.SetBool("isEating", true);
+        }
+    }
+
+    private void DoEatPlayer()
+    {
+        if(eatSound)
+        {
+            eatSound = false;
+            audio.PlayOneShot(eatClip, 1f);
+            Instantiate(bloodPrefab, eatPlayerModelr.transform.position, eatPlayerModelr.transform.rotation);
         }
     }
 
