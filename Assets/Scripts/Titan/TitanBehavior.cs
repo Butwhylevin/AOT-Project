@@ -27,6 +27,9 @@ public class TitanBehavior : MonoBehaviour
     Animator anim;
     [Header("Arm IK")]
     public TitanArmIK ikScript;
+    public Transform attackMover;
+    public float turnForRepeats = 10f;
+    public float slowRotSpeed;
 
     [Header("Camera Shake")]
     public float magn;
@@ -34,7 +37,7 @@ public class TitanBehavior : MonoBehaviour
 
     [Header("Eat Player")]
     public GameObject playerObj;
-    public GameObject playerCam, eatPlayerModelr;
+    public GameObject playerCam, eatPlayerModelr, eatPlayerCamerar;
 
     private void Start()
     {
@@ -99,25 +102,14 @@ public class TitanBehavior : MonoBehaviour
         else
         {
             moving = (curDist > maxDist);
-            DoCrouch();
+            ikScript.doAttack = true;
+            DoAttacking();
         }
     }
 
-    private void DoCrouch()
+    private void DoAttacking()
     {
-        if(target.position.y < 15)
-        {
-            crouching = true;
-            // activate arm IK
-            ikScript.doAttack = true;
-        }
-        else
-        {
-            crouching = false;
-            // deactivate arm IK
-            ikScript.doAttack = false;
-        }
-        anim.SetBool("playerBelow", crouching);
+        attackMover.LookAt(target.position);
     }
 
     private void DoFeetParticles()
@@ -154,6 +146,24 @@ public class TitanBehavior : MonoBehaviour
         }
     }
 
+    public void TurnToFacePlayer()
+    {
+        StartCoroutine("TurnForSeconds");
+    }
+
+    IEnumerator TurnForSeconds()
+    {
+        int i = 0;
+        while(i < turnForRepeats)
+        {
+            Vector3 D = target.position - transform.position;  
+            nextStepRot = Quaternion.Slerp(nextStepRot, Quaternion.LookRotation(D), slowRotSpeed * Time.deltaTime);
+            UpdateRot();
+            i ++;
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
     public void EnableRagdoll()
     {
         dead = true;
@@ -166,14 +176,19 @@ public class TitanBehavior : MonoBehaviour
 
     public void GrabPlayer(bool leftHand)
     {
-        playerObj.SetActive(false);
-        playerCam.SetActive(false);
-        if(!leftHand)
+        if(!dead)
         {
-            eatPlayerModelr.SetActive(true);
-        }
+            ikScript.ikActive = false;
+            playerObj.SetActive(false);
+            playerCam.SetActive(false);
+            if(!leftHand)
+            {
+                eatPlayerModelr.SetActive(true);
+                eatPlayerCamerar.SetActive(true);
+            }
 
-        anim.SetBool("isEating", true);
+            anim.SetBool("isEating", true);
+        }
     }
 
 }

@@ -7,6 +7,7 @@ using System.Collections;
 public class TitanArmIK : MonoBehaviour {
     
     protected Animator animator;
+    public TitanBehavior behaviorScript;
     
     public bool ikActive = false;
     public Transform rightHandObj = null;
@@ -44,11 +45,18 @@ public class TitanArmIK : MonoBehaviour {
                 {
                     if(rightHandObj != null) 
                     {
-                        animator.SetIKPositionWeight(AvatarIKGoal.RightHand,1);
-                        animator.SetIKRotationWeight(AvatarIKGoal.RightHand,1);  
-                        animator.SetIKPosition(AvatarIKGoal.RightHand,rightHandObj.position);
-                        Quaternion rot = Quaternion.LookRotation(rightHandObj.position - rHandBone.position);
-                        animator.SetIKRotation(AvatarIKGoal.RightHand,rot);
+                        if(Vector3.Dot(Vector3.forward, transform.InverseTransformPoint(rightHandObj.position)) > 0)
+                        {
+                            animator.SetIKPositionWeight(AvatarIKGoal.RightHand,1);
+                            animator.SetIKRotationWeight(AvatarIKGoal.RightHand,1);  
+                            animator.SetIKPosition(AvatarIKGoal.RightHand,rightHandObj.position);
+                            Quaternion rot = Quaternion.LookRotation(rightHandObj.position - rHandBone.position);
+                            animator.SetIKRotation(AvatarIKGoal.RightHand,rot);
+                        }
+                        else
+                        {
+                            behaviorScript.TurnToFacePlayer();
+                        }
                     }      
                 }                  
             }
