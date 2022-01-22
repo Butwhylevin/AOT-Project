@@ -13,6 +13,8 @@ public class TitanBehavior : MonoBehaviour
     public float curDist;
     bool moving;
     bool crouching;
+    public Rigidbody hipsRb;
+    public float hipsForce = 5000f;
 
     [Header("Feet Particles")]
     public Transform rFoot;
@@ -38,6 +40,7 @@ public class TitanBehavior : MonoBehaviour
     [Header("Eat Player")]
     public GameObject playerObj;
     public GameObject playerCam, eatPlayerModelr, eatPlayerCamerar;
+    public GameObject bloodPrefab;
 
     private void Start()
     {
@@ -168,10 +171,13 @@ public class TitanBehavior : MonoBehaviour
     {
         dead = true;
         anim.enabled = false;
+        Instantiate(bloodPrefab, target.position, target.rotation);
         foreach(Rigidbody rb in transform.GetChild(0).GetComponentsInChildren<Rigidbody>())
         {
             rb.isKinematic = false;
+            rb.AddForce(rb.gameObject.transform.forward * hipsForce);
         }
+        //hipsRb.AddForce(hipsRb.gameObject.transform.forward * hipsForce);
     }
 
     public void GrabPlayer(bool leftHand)

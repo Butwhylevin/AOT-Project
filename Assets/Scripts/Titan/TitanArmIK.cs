@@ -45,7 +45,9 @@ public class TitanArmIK : MonoBehaviour {
                 {
                     if(rightHandObj != null) 
                     {
-                        if(Vector3.Dot(Vector3.forward, transform.InverseTransformPoint(rightHandObj.position)) > 0)
+                        float dotProduct = Vector3.Dot(Vector3.forward, transform.InverseTransformPoint(rightHandObj.position));
+                        Debug.Log(dotProduct);
+                        if(dotProduct > 0)
                         {
                             animator.SetIKPositionWeight(AvatarIKGoal.RightHand,1);
                             animator.SetIKRotationWeight(AvatarIKGoal.RightHand,1);  

@@ -2717,6 +2717,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 1947391426}
   spd: 0.5
+  behaviorScript: {fileID: 919132149229982871}
+  startPos: {x: 0, y: 0, z: 0}
 --- !u!4 &1609277204 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4686108852305215209, guid: f549d34a109324a45bb8d14d0c65a916, type: 3}
@@ -5015,6 +5017,8 @@ MonoBehaviour:
   minDist: 35
   maxDist: 40
   curDist: 0
+  hipsRb: {fileID: 1182599071}
+  hipsForce: 5000
   rFoot: {fileID: 6110471695867980539}
   lFoot: {fileID: 3466819892746501054}
   rFootPart: 0
@@ -5024,7 +5028,7 @@ MonoBehaviour:
   ikScript: {fileID: 919132149229982872}
   attackMover: {fileID: 1363728454}
   turnForRepeats: 10
-  slowRotSpeed: 0.2
+  slowRotSpeed: 0.05
   magn: 3
   rough: 1
   fadeIn: 0
@@ -5033,6 +5037,7 @@ MonoBehaviour:
   playerCam: {fileID: 2010201550}
   eatPlayerModelr: {fileID: 1648991712}
   eatPlayerCamerar: {fileID: 770811417}
+  bloodPrefab: {fileID: 7762797303311143614, guid: c115a5c44fc2946479dab308d888b52b, type: 3}
 --- !u!114 &919132149229982872
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5046,6 +5051,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   behaviorScript: {fileID: 919132149229982871}
+  targetMover: {fileID: 1565183921}
   ikActive: 1
   rightHandObj: {fileID: 1565183920}
   lookObj: {fileID: 4686108851410676439}
